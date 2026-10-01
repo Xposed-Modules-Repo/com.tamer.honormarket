@@ -27,17 +27,20 @@ feature is an independent switch you can toggle on or off at any time.
 | 页面 Pages | 底部「游戏/应用/抢鲜」页签 / Bottom tabs: Games / Apps / Early-Access |
 | 「我的」页 Mine page | 签到、安全检测、清理加速、常用服务、滑动横幅卡片 / Check-in, security scan, cleaner, services, swipe banner cards |
 | 搜索 Search | 搜索框滚动热词横幅 / Rolling hot-word banner in the search box |
+| 搜索 Search | 搜索结果首位广告展位大卡、底部「装机必备」横滑 / First-position ad booth card & "Must-install" strip in search results |
+| 广告 Ads | 工具页标题栏运营活动入口（应用更新/安装管理等，如"耀耀农场"树形图标）/ Tool-page header activity entries (Updates, Install Manager, …) |
 
-共 23 个开关，默认配置即推荐配置。设置页每个选项均附英文说明。
-23 switches in total; defaults are the recommended set. Every option in the
+共 28 个功能开关（另有 1 个总开关），默认配置即推荐配置。设置页每个选项均附英文说明。
+28 feature switches plus a master switch; defaults are the recommended set. Every option in the
 settings UI carries an English subtitle.
 
 ## 环境要求 / Requirements
 
 * 已 root 的荣耀/MagicOS 设备：Magisk 或 KernelSU + Zygisk + LSPosed。
   A rooted Honor/MagicOS device: Magisk or KernelSU + Zygisk + LSPosed.
-* 荣耀应用市场 16.1.6.302（实测适配版本）。
-  Honor App Market 16.1.6.302 (the version this module was tested against).
+* 荣耀应用市场 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305（实测适配版本；其它版本类名可能漂移）。
+  Honor App Market 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305 (the versions this module was tested
+  against; other versions may drift).
 
 > 该市场的包经过资源与代码混淆，其他版本的类名可能变化导致功能静默失效；
 > 可在 LSPosed 日志过滤 `HonorMarketTamer` 查看 `armed` 行确认 Hook 是否命中。
@@ -53,6 +56,28 @@ settings UI carries an English subtitle.
    Force-stop the market app and reopen it.
 3. 设置入口：LSPosed 模块详情页，或桌面「荣耀市场净化」图标。
    Open settings from the LSPosed module page, or the launcher icon.
+
+**作用域说明 / Scope note**
+
+- 主功能（市场净化）只需要勾选「荣耀应用市场」（`com.hihonor.appmarket`）。
+  The core (market cleanup) only needs the "Honor App Market" scope
+  (`com.hihonor.appmarket`).
+- 「运动健康传感器闸门」（默认关闭）需要额外勾选「荣耀运动健康」
+  （`com.hihonor.health`）作用域，并在设置页打开该开关。该闸门只在健康 app 进程内
+  拦自己的传感器注册，**无需**勾选 iaware、ha ware（awareness）或「系统组件」
+  ——桌面步数卡片的中枢硬件在熄屏期继续累计，熄屏停采不丢数。
+  The health-sensor gate (off by default) additionally needs the "Honor Health"
+  scope (`com.hihonor.health`) plus the switch turned on in settings. It only
+  intercepts the health app's own sensor registrations inside that process, so the
+  iaware / ha ware (awareness) / "system components" scopes are **not** required —
+  the step-count hub keeps accumulating in hardware while the screen is off.
+- 「指纹解锁震动」（默认开启）需要额外勾选「系统用户界面」（`com.android.systemui`）
+  作用域。钩子挂在 SystemUI 自己的 `KeyguardUpdateMonitor` 成功回调上，**无需**勾选
+  「系统框架」，也不需要 LSPosed 的系统作用域修复开关。
+  The fingerprint-unlock vibration (on by default) needs the "System UI" scope
+  (`com.android.systemui`). The hook sits on SystemUI's own
+  `KeyguardUpdateMonitor` success callback, so the "Android System" (framework)
+  scope is **not** needed, nor the LSPosed system-scope workaround.
 
 ### 权限说明 / Permissions note
 
