@@ -38,17 +38,28 @@ settings UI carries an English subtitle.
 
 * 已 root 的荣耀/MagicOS 设备：Magisk 或 KernelSU + Zygisk + LSPosed。
   A rooted Honor/MagicOS device: Magisk or KernelSU + Zygisk + LSPosed.
-* 荣耀应用市场 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305（实测适配版本；其它版本类名可能漂移）。
-  Honor App Market 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305 (the versions this module was tested
-  against; other versions may drift).
+* 荣耀应用市场 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305 / 16.1.10.301（实测适配版本；其它版本类名可能漂移）。
+  Honor App Market 16.1.6.302 / 16.1.7.303 / 16.1.8.301 / 16.1.8.305 / 16.1.10.301 (the versions this
+  module was tested against; other versions may drift).
 
 > 该市场的包经过资源与代码混淆，其他版本的类名可能变化导致功能静默失效；
 > 可在 LSPosed 日志过滤 `HonorMarketTamer` 查看 `armed` 行确认 Hook 是否命中。
+> 自 v1.4.11 起，目标方法在本版市场不存在时会直接打 `MISSING 类名#方法名`（此前漂移
+> 也会显示"已装配"）；另外方法**参数个数**变化同样会让钩子永不命中，此时没有 MISSING
+> 行，只能对照广告是否真的还在。
 > The market APK is obfuscated; class names may change across versions and hooks
 > can silently miss. Filter LSPosed logs for `HonorMarketTamer` and check the
-> `armed` lines to confirm hooks are in place.
+> `armed` lines. Since v1.4.11 a method that no longer exists logs
+> `MISSING class#method`; a changed *parameter count* still misses silently with no
+> MISSING line, so there only check whether the ad is really still there.
 
 ## 使用方法 / Usage
+
+> v1.4.11 起使用新的签名证书：从 v1.4.9 及更早版本升级**必须先卸载旧模块**，覆盖安装会被
+> 系统拒绝（`INSTALL_FAILED_UPDATE_INCOMPATIBLE`）；卸载会连勾选状态一起清除，装好重设一次。
+> v1.4.11 and later are signed with a new certificate: uninstall v1.4.9 or earlier first —
+> installing over it fails with `INSTALL_FAILED_UPDATE_INCOMPATIBLE`, and the switch states
+> go away with the old app.
 
 1. 在 LSPosed 中启用本模块并勾选作用域「荣耀应用市场」。
    Enable the module in LSPosed and select the "Honor App Market" scope.
